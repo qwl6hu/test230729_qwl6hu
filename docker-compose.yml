@@ -1,0 +1,24 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=rmquser
+      - RABBITMQ_DEFAULT_PASS=rmqpass
+    ports:
+      - '5673:5672'
+      - '15672:15672'
+  microservice1-producer:
+    build:
+      context: ./microservice1-producer
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - rabbitmq
+  microservice2-consumer:
+    build:
+      context: ./microservice2-consumer
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
